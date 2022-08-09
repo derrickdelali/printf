@@ -1,44 +1,37 @@
 #include "main.h"
-
 /**
- * rot13 - encodes and prints a string in rot13
- * @args: va_list with the string to encode as its next element
+ * printf_rot13 - printf str to ROT13 place into buffer
+ * @args: type struct va_arg where is allocated printf arguments
+ * Return: counter
  *
- * Return: number of characters printed
  */
-
-int rot13(va_list args)
+int printf_rot13(va_list args)
 {
-	char *str = va_arg(args, char *);
-	char *rot13 = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
-	char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	int idx, count = 0;
-	char *encoded = NULL;
+	int i, j, counter = 0;
+	int k = 0;
+	char *s = va_arg(args, char*);
+	char alpha[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+	char beta[] = {"nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM"};
 
-	encoded = malloc(sizeof(char) * (_strlen(str) + 1));
-
-	if (!encoded || !str)
-		return (-1);
-
-	for (count = 0; str[count]; count++)
+	if (s == NULL)
+		s = "(null)";
+	for (i = 0; s[i]; i++)
 	{
-		for (idx = 0; idx < 52; idx++)
+		k = 0;
+		for (j = 0; alpha[j] && !k; j++)
 		{
-			if (str[count] == alphabet[idx])
+			if (s[i] == alpha[j])
 			{
-				encoded[count] = rot13[idx];
-				break;
+				_putchar(beta[j]);
+				counter++;
+				k = 1;
 			}
 		}
-/* Insert characters that do not get rot13'd -- punctuation and numbers */
-		if (str[count] != alphabet[idx])
-			encoded[count] = str[count];
+		if (!k)
+		{
+			_putchar(s[i]);
+			counter++;
+		}
 	}
-
-	for (count = 0; encoded[count]; count++)
-		_putchar(encoded[count]);
-
-	free(encoded);
-
-	return (count);
+	return (counter);
 }
