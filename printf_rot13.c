@@ -1,39 +1,44 @@
-#include "main.h"
+#include "holberton.h"
+
 /**
- * rot13 - encrypts string with rot13
- * @list: string to change
- * Return: modified string
+ * rot13 - encodes and prints a string in rot13
+ * @args: va_list with the string to encode as its next element
+ *
+ * Return: number of characters printed
  */
-char *rot13(va_list list)
+
+int rot13(va_list args)
 {
-	int i = 0;
-	char *str;
-	char *nstr;
+	char *str = va_arg(args, char *);
+	char *rot13 = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+	char *alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	int idx, count = 0;
+	char *encoded = NULL;
 
-	/* store va_arg to only access argument once */
-	str = va_arg(list, char *);
+	encoded = malloc(sizeof(char) * (_strlen(str) + 1));
 
-	/* malloc new variable to assign over new rot13 characters */
-	nstr = malloc(sizeof(char) * (_strlen(str) + 1));
-	if (nstr == NULL)
-		return (NULL);
+	if (!encoded || !str)
+		return (-1);
 
-	/* iterate str and assign rot13 char to nstr */
-	while (str[i] != '\0')
+	for (count = 0; str[count]; count++)
 	{
-		if ((str[i] >= 'a' && str[i] <= 'm') || (str[i] >= 'A' && str[i] <= 'M'))
+		for (idx = 0; idx < 52; idx++)
 		{
-			nstr[i] = str[i] + 13;
+			if (str[count] == alphabet[idx])
+			{
+				encoded[count] = rot13[idx];
+				break;
+			}
 		}
-		else if ((str[i] >= 'n' && str[i] <= 'z') || (str[i] >= 'N' && str[i] <= 'Z'))
-		{
-			nstr[i] = str[i] - 13;
-		}
-		else
-			(nstr[i] = str[i]);
-		i++;
+/* Insert characters that do not get rot13'd -- punctuation and numbers */
+		if (str[count] != alphabet[idx])
+			encoded[count] = str[count];
 	}
-	nstr[i] = '\0';
 
-	return (nstr);
+	for (count = 0; encoded[count]; count++)
+		_putchar(encoded[count]);
+
+	free(encoded);
+
+	return (count);
 }
